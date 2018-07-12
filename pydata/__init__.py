@@ -1,2 +1,1 @@
-from .stlhandler import STLHandler
-from .vtkhandler import VTKHandler
+from .dataset import Dataset
