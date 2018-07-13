@@ -9,16 +9,20 @@ class VTKHandler(object):
     _writer_ = vtkDataSetWriter
 
     @classmethod
+    def _polydata(cls, filename):
+        reader = cls._reader_()
+        reader.SetFileName(filename)
+        reader.Update()
+        return reader.GetOutput()
+
+    @classmethod
     def read(cls, filename):
 
+        data = cls._polydata(filename)
         result = {
             'cells': [],
             'points': None
         }
-        reader = cls._reader_()
-        reader.SetFileName(filename)
-        reader.Update()
-        data = reader.GetOutput()
         for id_cell in range(data.GetNumberOfCells()):
             cell = data.GetCell(id_cell)
             result['cells'].append([
