@@ -1,6 +1,6 @@
+""" TODO """
 import os
 import importlib
-import sys
 
 class Dataset(object):
     handlers = {
@@ -17,14 +17,16 @@ class Dataset(object):
     }
 
     def read(self, filename):
+        """ TODO """
         module, handler = self.handlers.get(os.path.splitext(filename)[1])
         reader = getattr(
-                importlib.import_module(module, package='pydata'), handler)
+            importlib.import_module(module, package='pydata'), handler)
         for attr, value in reader.read(filename).items():
             setattr(self, attr, value)
 
     def write(self, filename):
+        """ TODO """
         module, handler = self.handlers.get(os.path.splitext(filename)[1])
         writer = getattr(
-                importlib.import_module(module, package='pydata'), handler)
+            importlib.import_module(module, package='pydata'), handler)
         writer.write(filename, self)
