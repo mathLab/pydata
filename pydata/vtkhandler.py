@@ -1,10 +1,11 @@
-from vtk import vtkDataSetReader, vtkDataSetWriter, vtkPolyData, vtkPoints, vtkCellArray
+from vtk import (vtkDataSetReader, vtkDataSetWriter,
+    vtkPolyData, vtkPoints, vtkCellArray)
 from vtk.util.numpy_support import vtk_to_numpy, numpy_to_vtk
 
 import numpy as np
 
 class VTKHandler(object):
-
+    """ TODO """
     _reader_ = vtkDataSetReader
     _writer_ = vtkDataSetWriter
 
@@ -17,7 +18,7 @@ class VTKHandler(object):
 
     @classmethod
     def read(cls, filename):
-
+        """ TODO """
         data = cls._polydata(filename)
         result = {
             'cells': [],
@@ -36,7 +37,7 @@ class VTKHandler(object):
 
     @classmethod
     def write(cls, filename, data):
-        
+        """ TODO """
         polydata = vtkPolyData()
 
         vtk_points = vtkPoints()
