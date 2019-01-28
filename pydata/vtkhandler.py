@@ -1,35 +1,55 @@
-from vtk import (vtkDataSetReader, vtkDataSetWriter,
-    vtkPolyData, vtkPoints, vtkCellArray)
+from vtk import vtkPolyDataReader, vtkPolyDataWriter
+from vtk import vtkPolyData, vtkPoints, vtkCellArray
+
 from vtk.util.numpy_support import vtk_to_numpy, numpy_to_vtk
 
 import numpy as np
 
 class VTKHandler(object):
     """ TODO """
-    _reader_ = vtkDataSetReader
-    _writer_ = vtkDataSetWriter
+    _reader_ = vtkPolyDataReader
+    _writer_ = vtkPolyDataWriter
 
     @classmethod
-    def _polydata(cls, filename):
+    def _polydata_from_file(cls, filename):
+        """
+        Load a vtkPolyData object from `filename`.
+
+        :param str filename: the name of the file where data is stored.
+        :return: geometrical and topological information
+        :rtype: vtk.vtkPolyData
+        """
         reader = cls._reader_()
         reader.SetFileName(filename)
         reader.Update()
         return reader.GetOutput()
 
     @classmethod
+    def _polydata_to_file(cls, filename, polydata):
+        """
+        Load a vtkPolyData object from `filename`.
+
+        :param str filename: the name of the file where data is stored.
+        :return: geometrical and topological information
+        :rtype: vtk.vtkPolyData
+        """
+        writer = cls._writer_()
+        writer.SetFileName(filename)
+        writer.SetInputData(polydata)
+        writer.Write()
+
+    @classmethod
     def read(cls, filename):
-        """ TODO """
-        data = cls._polydata(filename)
-        result = {
-            'cells': [],
-            'points': None
-        }
+
+        data = cls._polydata_from_file(filename)
+        result = {'cells': [], 'points': None}
+
         for id_cell in range(data.GetNumberOfCells()):
             cell = data.GetCell(id_cell)
             result['cells'].append([
-                cell.GetPointId(id_point) 
-                for id_point in range(cell.GetNumberOfPoints())]
-            )
+                cell.GetPointId(id_point)
+                for id_point in range(cell.GetNumberOfPoints())
+            ])
 
         result['points'] = vtk_to_numpy(data.GetPoints().GetData())
 
@@ -41,16 +61,13 @@ class VTKHandler(object):
         polydata = vtkPolyData()
 
         vtk_points = vtkPoints()
-        vtk_points.SetData(numpy_to_vtk(data.points))
+        vtk_points.SetData(numpy_to_vtk(data['points']))
 
         vtk_cells = vtkCellArray()
-        for cell in data.cells:
+        for cell in data['cells']:
             vtk_cells.InsertNextCell(len(cell), cell)
 
         polydata.SetPoints(vtk_points)
         polydata.SetPolys(vtk_cells)
 
-        writer = cls._writer_()
-        writer.SetFileName(filename)
-        writer.SetInputData(polydata)
-        writer.Write()
+        cls._polydata_to_file(filename, polydata)

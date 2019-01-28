@@ -1,12 +1,12 @@
 from OCC.BRep import BRep_Tool, BRep_Builder, BRep_Tool_Curve
 from OCC.BRepAlgo import brepalgo_IsValid
-from OCC.BRepBuilderAPI import (BRepBuilderAPI_MakeEdge,
-    BRepBuilderAPI_MakeFace, BRepBuilderAPI_NurbsConvert,
-    BRepBuilderAPI_MakeWire, BRepBuilderAPI_Sewing)
+from OCC.BRepBuilderAPI import (
+    BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeFace,
+    BRepBuilderAPI_NurbsConvert, BRepBuilderAPI_MakeWire, BRepBuilderAPI_Sewing)
 from OCC.BRepOffsetAPI import BRepOffsetAPI_FindContigousEdges
 from OCC.Display.SimpleGui import init_display
 from OCC.GeomConvert import (geomconvert_SurfaceToBSplineSurface,
-    geomconvert_CurveToBSplineCurve)
+                             geomconvert_CurveToBSplineCurve)
 from OCC.gp import gp_Pnt, gp_XYZ
 from OCC.IGESControl import (IGESControl_Controller,
     IGESControl_Reader, IGESControl_Controller_Init,
@@ -16,18 +16,18 @@ from OCC.ShapeAnalysis import ShapeAnalysis_WireOrder
 from OCC.ShapeFix import ShapeFix_ShapeTolerance, ShapeFix_Shell
 from OCC.StlAPI import StlAPI_Writer
 from OCC.TColgp import TColgp_Array1OfPnt, TColgp_Array2OfPnt
-from OCC.TopAbs import (TopAbs_FACE, TopAbs_EDGE, TopAbs_WIRE,
-    TopAbs_VERTEX, TopAbs_FORWARD, TopAbs_SHELL)
-from OCC.TopoDS import (topods_Face, TopoDS_Compound, topods_Shell,
-    topods_Edge, topods_Wire, topods, TopoDS_Shape)
+from OCC.TopAbs import (TopAbs_FACE, TopAbs_EDGE, TopAbs_WIRE, TopAbs_FORWARD,
+                        TopAbs_SHELL)
 from OCC.TopExp import TopExp_Explorer, topexp
+from OCC.TopoDS import (topods_Face, TopoDS_Compound, topods_Shell, topods_Edge,
+                        topods_Wire, topods, TopoDS_Shape)
 
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-class IGESHandler(object):
 
+class IGESHandler(object):
     @classmethod
     def read(cls, filename):
         controller = IGESControl_Controller()
@@ -79,14 +79,18 @@ class IGESHandler(object):
             # (used for FFD)
             mesh_points = np.append(
                 mesh_points, control_polygon_coordinates, axis=0)
-            control_point_position.append(
-                control_point_position[-1] + n_poles_u * n_poles_v)
+            control_point_position.append(control_point_position[-1] +
+                                          n_poles_u * n_poles_v)
 
             n_faces += 1
             faces_explorer.Next()
 
-        return {'shape': shape, 'points': mesh_points, 'control_point_position': control_point_position}
-    
+        return {
+            'shape': shape,
+            'points': mesh_points,
+            'control_point_position': control_point_position
+        }
+
     @classmethod
     def write(cls, filename, data, tolerance=1e-6):
 
@@ -120,7 +124,7 @@ class IGESHandler(object):
             for pole_u_direction in range(n_poles_u):
                 for pole_v_direction in range(n_poles_v):
                     control_point_coordinates = mesh_points[
-                        + control_point_position[n_faces], :]
+                        +control_point_position[n_faces], :]
                     point_xyz = gp_XYZ(*control_point_coordinates)
 
                     gp_point = gp_Pnt(point_xyz)
@@ -159,7 +163,7 @@ class IGESHandler(object):
             compound_builder.Add(compound, brep_surf)
             n_faces += 1
             faces_explorer.Next()
-        
+
         IGESControl_Controller_Init()
         writer = IGESControl_Writer()
         writer.AddShape(compound)
