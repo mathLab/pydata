@@ -2,18 +2,16 @@
 import os
 import importlib
 
+
 class Dataset(object):
     handlers = {
-        '.vtk':  ('.vtkhandler',    'VTKHandler'   ),
-        '.vti':  ('.vtihandler',    'VTIHandler'   ),
-        '.vtp':  ('.vtphandler',    'VTPHandler'   ),
-        '.vtr':  ('.vtrhandler',    'VTRHandler'   ),
-        '.vts':  ('.vtshandler',    'VTSHandler'   ),
-        '.vtu':  ('.vtuhandler',    'VTUHandler'   ),
-        '.ply':  ('.plyhandler',    'PLYHandler'   ),
-        '.stl':  ('.stlhandler',    'STLHandler'   ),
-        '.iges': ('.igeshandler',   'IGESHandler'  ),
-        '.k':    ('.lsdynahandler', 'LSDYNAHandler')
+        '.vtk': ('.vtkhandler', 'VTKHandler'),
+        '.vtp': ('.vtphandler', 'VTPHandler'),
+        '.vtu': ('.vtuhandler', 'VTUHandler'),
+        '.ply': ('.plyhandler', 'PLYHandler'),
+        '.stl': ('.stlhandler', 'STLHandler'),
+        '.iges': ('.igeshandler', 'IGESHandler'),
+        '.k': ('.lsdynahandler', 'LSDYNAHandler')
     }
 
     def read(self, filename):
@@ -29,4 +27,4 @@ class Dataset(object):
         module, handler = self.handlers.get(os.path.splitext(filename)[1])
         writer = getattr(
             importlib.import_module(module, package='pydata'), handler)
-        writer.write(filename, self)
+        writer.write(filename, vars(self))
