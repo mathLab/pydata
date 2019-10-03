@@ -1,5 +1,18 @@
 <p align="center">
+    <a href="https://github.com/mathLab/EZyRB/blob/master/LICENSE.rst" target="_blank">
+        <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
+    </a>
+    <a href="https://travis-ci.org/mathLab/pydata" target="_blank">
+        <img alt="Build Status" src="https://travis-ci.org/mathLab/pydata.svg">
+    </a>
+    <a href="https://coveralls.io/github/mathLab/pydata" target="_blank">
+        <img alt="Coverage Status" src="https://coveralls.io/repos/github/mathLab/pydata/badge.svg">
+    </a>
+    <a class="badge-align" href="https://www.codacy.com/manual/mathLab/pydata?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mathLab/pydata&amp;utm_campaign=Badge_Grade">
+        <img src="https://api.codacy.com/project/badge/Grade/ff6570910f5e4101ad4fa6c0700a07db"/>
+    </a>
 </p>
+
 
 **pydata** is a python package that allows you to handle several scientific file formats.
 
@@ -104,4 +117,4 @@ just a few small guidelines you need to follow.
 
 ## License
 
-See the [LICENSE](LICENSE) file for license rights and limitations (MIT).
+See the [LICENSE](LICENSE.rst) file for license rights and limitations (MIT).
