@@ -53,6 +53,22 @@ class VTKHandler(object):
 
         result['points'] = vtk_to_numpy(data.GetPoints().GetData())
 
+        # Point data
+        for i in range(data.GetPointData().GetNumberOfArrays()):
+            array = vtk_to_numpy(data.GetPointData().GetArray(i))
+            name = data.GetPointData().GetArrayName(i)
+            if 'point_data' not in result:
+                result['point_data'] = dict()
+            result['point_data'][name] = array
+
+        # Cell data
+        for i in range(data.GetCellData().GetNumberOfArrays()):
+            array = vtk_to_numpy(data.GetCellData().GetArray(i))
+            name = data.GetCellData().GetArrayName(i)
+            if 'cell_data' not in result:
+                result['cell_data'] = dict()
+            result['cell_data'][name] = array
+
         return result
 
     @classmethod
@@ -66,6 +82,18 @@ class VTKHandler(object):
         vtk_cells = vtkCellArray()
         for cell in data['cells']:
             vtk_cells.InsertNextCell(len(cell), cell)
+
+        if 'point_data' in data:
+            for name, array in data['point_data'].items():
+                vtk_array = numpy_to_vtk(array)
+                vtk_array.SetName(name)
+                polydata.GetPointData().AddArray(vtk_array)
+
+        if 'cell_data' in data:
+            for name, array in data['cell_data'].items():
+                vtk_array = numpy_to_vtk(array)
+                vtk_array.SetName(name)
+                polydata.GetCellData().AddArray(vtk_array)
 
         polydata.SetPoints(vtk_points)
         polydata.SetPolys(vtk_cells)
