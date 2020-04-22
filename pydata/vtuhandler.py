@@ -65,8 +65,19 @@ class VTUHandler(VTKHandler):
 
         cells = vtkCellArray()
         for cell in data['cells']:
-
             cells.InsertNextCell(len(cell), cell)
+
+        if 'point_data' in data:
+            for name, array in data['point_data'].items():
+                vtu_array = numpy_to_vtk(array)
+                vtu_array.SetName(name)
+                unstructured_grid.GetPointData().AddArray(vtu_array)
+
+        if 'cell_data' in data:
+            for name, array in data['cell_data'].items():
+                vtu_array = numpy_to_vtk(array)
+                vtu_array.SetName(name)
+                unstructured_grid.GetCellData().AddArray(vtu_array)
 
         unstructured_grid.SetPoints(points)
         unstructured_grid.SetCells(VTK_POLYGON, cells)
