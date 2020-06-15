@@ -8,8 +8,7 @@
 """
 from vtk import vtkXMLUnstructuredGridReader, vtkXMLUnstructuredGridWriter
 from vtk import vtkUnstructuredGrid, vtkPoints, vtkCellArray
-from vtk import vtkGeometryFilter
-from vtk import VTK_POLYGON
+from vtk import VTK_TETRA
 
 from vtk.util.numpy_support import vtk_to_numpy, numpy_to_vtk
 
@@ -27,22 +26,18 @@ class VTUHandler(VTKHandler):
     @classmethod
     def _polydata_from_file(cls, filename):
         """
-        Private method to extract vtkPolyData from `filename`. The `filename`
+        Private method to extract vtkTetraData from `filename`. The `filename`
         have to be well-formatted VTU file.
 
         :param str filename: the name of the file to parse.
         :return: the dataset
-        :rtype: vtkPolyData
+        :rtype: vtkTetraData
         """
         reader = cls._reader_()
         reader.SetFileName(filename)
         reader.Update()
 
-        geometryFilter = vtkGeometryFilter()
-        geometryFilter.SetInputData(reader.GetOutput())
-        geometryFilter.Update()
-
-        return geometryFilter.GetOutput()
+        return reader.GetOutput()
 
     @classmethod
     def write(cls, filename, data):
@@ -54,7 +49,7 @@ class VTUHandler(VTKHandler):
         :param str filename: the name of the file to write.
         :param dict data: the dataset to save.
 
-        .. warning:: all the cells will be stored as VTK_POLYGON.
+        .. warning:: all the cells will be stored as VTK_TETRA.
             
         """
 
@@ -80,7 +75,7 @@ class VTUHandler(VTKHandler):
                 unstructured_grid.GetCellData().AddArray(vtu_array)
 
         unstructured_grid.SetPoints(points)
-        unstructured_grid.SetCells(VTK_POLYGON, cells)
+        unstructured_grid.SetCells(VTK_TETRA, cells)
 
         writer = cls._writer_()
         writer.SetFileName(filename)
